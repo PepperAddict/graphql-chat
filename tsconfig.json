@@ -1,0 +1,17 @@
+{   "compileOnSave": true,
+    "compilerOptions": {
+        "outDir": "./public/",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "module": "commonjs",
+        "target": "es6",
+        "jsx": "react",
+        "noLib": false,
+        "allowJs": true,
+        "esModuleInterop": true
+    },
+    "files": [
+        "./frontend/component/App.tsx"
+    ],
+    "include": ["./frontend/*"]
+}
