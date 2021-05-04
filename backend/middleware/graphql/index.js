@@ -1,5 +1,5 @@
-const {types} = require('./schemaDefinitionLanguage/types');
+const {typeDefs} = require('./schemaDefinitionLanguage/types');
 const {resolvers} = require('./schemaDefinitionLanguage/resolver')
 
 
-module.exports = {types, resolvers}
+module.exports = {typeDefs, resolvers}

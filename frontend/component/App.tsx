@@ -13,15 +13,15 @@ import { Provider } from 'react-redux'
 //apollo/graphql portion
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { WebSocketLink } from '@apollo/client/link/ws';
-const link = new WebSocketLink({
-  uri: `ws://localhost:3000/subscriptions`,
-  options: {
-    reconnect: true
-  }
-})
+// const link = new WebSocketLink({
+//   uri: `ws://localhost:3000/subscriptions`,
+//   options: {
+//     reconnect: true
+//   }
+// })
 
 const client = new ApolloClient({
-  link,
+  // link,
   uri: 'http://localhost:8080/graphql',
   cache: new InMemoryCache({
     typePolicies: {
@@ -49,7 +49,6 @@ const App = () => {
     <Provider store={store}>
       <ApolloProvider client={client}>
         <Router>
-          
           <Route exact path="/">
             <Welcome />
           </Route>
