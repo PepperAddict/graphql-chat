@@ -9,10 +9,12 @@ export default function Room() {
 
     const user = useSelector((state: RootStateOrAny) => state.user.value);
     const [message, setMessage] = useState('');
+
+
     const [sendMessage] = useMutation(POST_MESSAGE);
     const {loading, error, data} = useQuery(GET_MESSAGES);
 
-    const postMessage = (e) => {
+    const submitForm = (e) => {
         e.preventDefault();
 
         sendMessage({
@@ -21,8 +23,8 @@ export default function Room() {
                 theMessage: message
             }
         })
-        
     }
+
     if (!user) {
         return <Redirect to="/" />
     }
@@ -34,9 +36,9 @@ export default function Room() {
         return <p key={key} id={_id}> {name}: {message}</p>
     })}
     
-    <form onSubmit={postMessage}>
+    <form onSubmit={submitForm}>
         <p>Enter a Message</p>
-    <input placeholder="Enter a message" onChange={(e) => setMessage(e.target.value)}/>
+        <input placeholder="Enter a message" onChange={(e) => setMessage(e.target.value)}/>
     </form>
     </div>
 }

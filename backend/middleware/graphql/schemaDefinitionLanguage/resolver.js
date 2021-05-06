@@ -1,9 +1,16 @@
 const { neDBAll, neDBAdd } = require("../../../helpers");
+
+//importing pubsub here since sending it as context kept saying it was undefined. 
+const { PubSub } = require("apollo-server-express");
+const pubsub = new PubSub();
+
+const POST_CREATED = "KEY";
+
 const resolvers = {
   Query: {
     getAllMessages: async (parent, variables, { database }) => {
       const allData = await neDBAll(database);
-      console.log(allData)
+
       return allData;
     },
   },
@@ -11,42 +18,31 @@ const resolvers = {
   Mutation: {
     postMessage: async (parent, { name, message }, { database }) => {
       try {
-        return await neDBAdd(database, { name, message }).then(() => {
-          return true;
-        });
+        return await neDBAdd(database, { name, message }).then(
+          ({ _id, name, message }) => {
+            
+            //this will publish our message to our subscription
+            pubsub.publish(POST_CREATED, {
+              newMessages: {
+                _id,
+                name,
+                message,
+              },
+            });
+            
+            return true;
+          }
+        );
       } catch (err) {
         return false;
       }
     },
-
   },
-
-  // Subscription: {
-  //   liveMessages: {
-  //     subscribe: (payload, {}, {onMessages}) => {
-
-  //       const SOMETHING_CHANGED_TOPIC = Math.random().toString(36).slice(2, 15);
-
-  //       onMessages(async () =>
-  //         pubsub.publish(SOMETHING_CHANGED_TOPIC, {
-  //           message: await redis.lrange(room, 0, -1).then( async (res) => {
-  //             return await parseMSG(res)
-  //           }).catch((err) => console.log('two', err)),
-  //         })
-  //       );
-  //       setTimeout(
-  //         async () =>
-  //           pubsub.publish(SOMETHING_CHANGED_TOPIC, {
-  //             message: await redis.lrange(room, 0, -1).then(async (res) => {
-  //               return await parseMSG(res)
-  //             }).catch((err) => console.log('one', err)),
-  //           }),
-  //         0
-  //       );
-
-  //     },
-  //   },
-  // },
+  Subscription: {
+    newMessages: {
+      subscribe: () => pubsub.asyncIterator(POST_CREATED),
+    },
+  },
 };
 
 module.exports = { resolvers };

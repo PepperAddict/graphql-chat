@@ -10,7 +10,17 @@ query {
 `;
 
 export const POST_MESSAGE = gql`
-mutation postMessageTime($theUser: String!, $theMessage: String!) {
+mutation ($theUser: String!, $theMessage: String!) {
     postMessage(name: $theUser, message: $theMessage)
   }
+`
+
+export const WATCH_MESSAGE = gql`
+subscription {
+  newMessages {
+    _id 
+    name 
+    message
+  }
+}
 `
