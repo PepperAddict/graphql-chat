@@ -10,8 +10,8 @@ query {
 `;
 
 export const POST_MESSAGE = gql`
-mutation ($theUser: String!, $theMessage: String!) {
-    postMessage(name: $theUser, message: $theMessage)
+mutation ($theUser: String!, $theMessage: String!, $theFile: String) {
+    postMessage(name: $theUser, message: $theMessage, file: $theFile)
   }
 `
 
@@ -21,6 +21,15 @@ subscription {
     _id 
     name 
     message
+    date
+    file
   }
 }
+`
+
+export const UPLOAD_IMAGE = gql`
+mutation ($file:  Upload!) {
+  uploadImage(file: $file) 
+}
+
 `

@@ -7,9 +7,20 @@ const neDBAll = (database) => {
     }).catch((err) => console.log(err))
 }
 
-const neDBAdd = (database, data) => {
+const neDBCount = (database) => {
     return new Promise((resolve, reject) => {
-        database.insert(data, (err, newDoc) => {
+        database.find({}, (err, docs) => {
+            if (err) reject(err);
+            resolve(docs.length);
+        })
+    }).catch((err) => console.log(err))
+}
+
+const neDBAdd = async (database, data) => {
+    const count = await neDBCount(database)
+    
+    return new Promise((resolve, reject) => {
+        database.insert({...data, _id: count + 1}, (err, newDoc) => {
             if (err) reject(err);
             resolve(newDoc)
         })

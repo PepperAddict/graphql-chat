@@ -1,16 +1,20 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import { useMutation, useQuery, useSubscription } from '@apollo/client';
+import { useMutation, useSubscription } from '@apollo/client';
 import { RootStateOrAny, useSelector } from 'react-redux';
-import { POST_MESSAGE, GET_MESSAGES, WATCH_MESSAGE} from '../helpers/graphql.js';
+import { POST_MESSAGE, WATCH_MESSAGE } from '../helpers/graphql.js';
 
-function Messages ({messages}) {
-return (<div>
-    { messages.map(({_id, name, message}, key) => {
-        return <p key={key} id={_id}> {name}: {message}</p>
-    })}
+function Messages({ messages }) {
+
+    return (<div>
+        { messages.sort((a, b) => b._id - a._id).map(({ _id, name, message, file }, key) => {
+            if (file === "true") {
+                return <div key={_id}> <p>{name}</p> <img src={message} /></div>
+            }
+            return <p key={_id}> <strong>{name}: </strong> {message}</p>
+        })}
     </div>
-)
+    )
 }
 
 
@@ -21,14 +25,14 @@ export default function Room() {
 
 
     const [sendMessage] = useMutation(POST_MESSAGE);
-    const {loading, error, data} = useSubscription(WATCH_MESSAGE);
+    const { loading, error, data } = useSubscription(WATCH_MESSAGE);
 
     const submitForm = (e) => {
         e.preventDefault();
 
         sendMessage({
             variables: {
-                theUser: user, 
+                theUser: user,
                 theMessage: message
             }
         })
@@ -41,14 +45,12 @@ export default function Room() {
     }
 
     return <div>
-    <h1>Hello {user}</h1>
-    {data && <Messages messages={data.newMessages}/>}
-    
-    
-    <form onSubmit={submitForm}>
-        <p>Enter a Message</p>
-        <input placeholder="Enter a message" value={message} onChange={(e) => setMessage(e.target.value)}/>
-        <button type="submit">Send</button>
-    </form>
+        <h1>Hello {user}</h1>
+        {data && <Messages messages={data.newMessages} />}
+
+        <form onSubmit={submitForm}>
+            <input placeholder="Enter a message" value={message} onChange={(e) => setMessage(e.target.value)} />
+            <button type="submit">Send</button>
+        </form>
     </div>
 }
