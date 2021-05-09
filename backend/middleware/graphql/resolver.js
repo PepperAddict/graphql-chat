@@ -1,4 +1,4 @@
-const { neDBAll, neDBAdd } = require("../../../helpers");
+const { neDBAll, neDBAdd } = require("../../helpers");
 //importing pubsub here since sending it as context kept saying it was undefined.
 const { PubSub } = require("apollo-server-express");
 const pubsub = new PubSub();
