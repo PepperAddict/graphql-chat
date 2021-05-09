@@ -8,15 +8,11 @@ const {typeDefs, resolvers} = require('./middleware/graphql');
 const schema = makeExecutableSchema({typeDefs, resolvers})
 
 const {ApolloServer, PubSub} = require('apollo-server-express');
+const pubsub = new PubSub();
 
 //webpack configuration + hot reloading
 require('./middleware/webpack')(app)
 
-
-//for nedb
-const Datastore = require('nedb');
-const database = new Datastore('database.db');
-database.loadDatabase();
 
 //The necessities to get graphql subscription to work
 const { createServer } = require('http')
@@ -30,12 +26,12 @@ subServ.listen(8080, () => {
       schema
     }, {
       server: subServ,
-      path: '/subscriptions',
+      path: '/subscriptions'
     });
 });
 
 //setting up our graphql server
-const graphqlServer = new ApolloServer({ typeDefs, resolvers, playground: true, context: ({req, res}) => ({req, res, database}), subscriptions: {path: '/subscriptions'} })
+const graphqlServer = new ApolloServer({ typeDefs, resolvers, context: {pubsub}, playground: true, subscriptions: {path: '/subscriptions'} })
 graphqlServer.applyMiddleware({app});
 
 

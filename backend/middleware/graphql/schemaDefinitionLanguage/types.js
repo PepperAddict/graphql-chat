@@ -21,7 +21,7 @@ const typeDefs = gql`
 
   #Subscription
   type Subscription {
-    newMessages: Message
+    newMessages: [Message!]
   }
 `;
 

@@ -12,32 +12,18 @@ import { Provider } from 'react-redux'
 
 //apollo/graphql portion
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+//this portion enables subscriptions
 import { WebSocketLink } from '@apollo/client/link/ws';
-// const link = new WebSocketLink({
-//   uri: `ws://localhost:3000/subscriptions`,
-//   options: {
-//     reconnect: true
-//   }
-// })
+const link = new WebSocketLink({
+  uri: `ws://localhost:8080/subscriptions`,
+
+})
 
 const client = new ApolloClient({
-  // link,
+   link,
   uri: 'http://localhost:8080/graphql',
-  cache: new InMemoryCache({
-    typePolicies: {
-      Subscription: {
-        fields: {
-          message: {
-            //we need to deal with how the new information coming in with the old
-            //since the data doesn't have a proper id setup. This is the quick fix. 
-            merge(existing = [], incoming: any) {
-              return {...existing, ...incoming}
-            }
-          }
-        }
-      },
-    },
-  })
+  cache: new InMemoryCache()
 })
 
 // import components

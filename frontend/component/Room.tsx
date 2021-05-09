@@ -2,7 +2,16 @@ import React, {useState} from 'react';
 import { Redirect } from 'react-router-dom';
 import { useMutation, useQuery, useSubscription } from '@apollo/client';
 import { RootStateOrAny, useSelector } from 'react-redux';
-import { POST_MESSAGE, GET_MESSAGES} from '../helpers/graphql.js'
+import { POST_MESSAGE, GET_MESSAGES, WATCH_MESSAGE} from '../helpers/graphql.js';
+
+function Messages ({messages}) {
+return (<div>
+    { messages.map(({_id, name, message}, key) => {
+        return <p key={key} id={_id}> {name}: {message}</p>
+    })}
+    </div>
+)
+}
 
 
 export default function Room() {
@@ -12,7 +21,7 @@ export default function Room() {
 
 
     const [sendMessage] = useMutation(POST_MESSAGE);
-    const {loading, error, data} = useQuery(GET_MESSAGES);
+    const {loading, error, data} = useSubscription(WATCH_MESSAGE);
 
     const submitForm = (e) => {
         e.preventDefault();
@@ -23,6 +32,8 @@ export default function Room() {
                 theMessage: message
             }
         })
+
+        setMessage('')
     }
 
     if (!user) {
@@ -31,14 +42,13 @@ export default function Room() {
 
     return <div>
     <h1>Hello {user}</h1>
-
-    {data && data.getAllMessages.map(({_id, name, message}, key) => {
-        return <p key={key} id={_id}> {name}: {message}</p>
-    })}
+    {data && <Messages messages={data.newMessages}/>}
+    
     
     <form onSubmit={submitForm}>
         <p>Enter a Message</p>
-        <input placeholder="Enter a message" onChange={(e) => setMessage(e.target.value)}/>
+        <input placeholder="Enter a message" value={message} onChange={(e) => setMessage(e.target.value)}/>
+        <button type="submit">Send</button>
     </form>
     </div>
 }

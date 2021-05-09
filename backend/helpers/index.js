@@ -4,7 +4,7 @@ const neDBAll = (database) => {
             if (err) reject(err);
             resolve(docs);
         })
-    })
+    }).catch((err) => console.log(err))
 }
 
 const neDBAdd = (database, data) => {
@@ -13,7 +13,7 @@ const neDBAdd = (database, data) => {
             if (err) reject(err);
             resolve(newDoc)
         })
-    })
+    }).catch((err) => console.log(err))
 }
 
 module.exports = {neDBAll, neDBAdd}

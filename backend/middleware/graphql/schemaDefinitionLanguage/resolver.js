@@ -1,14 +1,22 @@
 const { neDBAll, neDBAdd } = require("../../../helpers");
-
-//importing pubsub here since sending it as context kept saying it was undefined. 
+//importing pubsub here since sending it as context kept saying it was undefined.
 const { PubSub } = require("apollo-server-express");
 const pubsub = new PubSub();
+//for nedb
+const Datastore = require("nedb");
+const database = new Datastore("database.db");
+database.loadDatabase();
 
-const POST_CREATED = "KEY";
+
+
+//our subscribers for our subscription
+const subscribers = [];
+//the function that adds a new subscriber
+const newSubscriber = (fn) => subscribers.push(fn);
 
 const resolvers = {
   Query: {
-    getAllMessages: async (parent, variables, { database }) => {
+    getAllMessages: async (parent, variables) => {
       const allData = await neDBAll(database);
 
       return allData;
@@ -16,23 +24,16 @@ const resolvers = {
   },
 
   Mutation: {
-    postMessage: async (parent, { name, message }, { database }) => {
+    postMessage: async (parent, { name, message }) => {
+      
       try {
-        return await neDBAdd(database, { name, message }).then(
-          ({ _id, name, message }) => {
-            
-            //this will publish our message to our subscription
-            pubsub.publish(POST_CREATED, {
-              newMessages: {
-                _id,
-                name,
-                message,
-              },
-            });
-            
+        return await neDBAdd(database, { name, message })
+          .then((res) => {
+            //this will trigger the subscribers and give them the updated messages
+            subscribers.forEach((fn) => fn())
             return true;
-          }
-        );
+          })
+          .catch((err) => console.log(err));
       } catch (err) {
         return false;
       }
@@ -40,7 +41,17 @@ const resolvers = {
   },
   Subscription: {
     newMessages: {
-      subscribe: () => pubsub.asyncIterator(POST_CREATED),
+      subscribe: async () => {
+        const channel = "COOL";
+
+        newSubscriber(async () => await pubsub.publish(channel, { newMessages: await neDBAll(database) }))
+        
+        // //send the data as soon as you enter
+        setTimeout(async () => await pubsub.publish(channel, { newMessages: await neDBAll(database) }), 0);
+
+        //turning on the subscription possibility to the channel
+        return pubsub.asyncIterator(channel);
+      },
     },
   },
 };
