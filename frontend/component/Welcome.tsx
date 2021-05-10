@@ -2,7 +2,7 @@ import React, {useState, useRef} from 'react';
 import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch, RootStateOrAny } from 'react-redux';
 import { setName } from '../redux/states.js';
-import UploadFile from './UploadImage'
+import '../styles/app.styl'
 
 export default function Welcome () {
 
@@ -23,14 +23,12 @@ export default function Welcome () {
     }
 
     return (
-        <div>
-            <h1>Chatroom</h1>
+        <div className="home-container">
+            <h1>Welcome to the ChatClub</h1>
             <form onSubmit={enterUsername}>
-                <label>
-                   <input placeholder="enter a nickname" onChange={(e) => inputName(e.target.value)} /> 
-                </label>
+                   <input placeholder="Enter a nickname" pattern="[A-Za-z]{3,}" title="Letters only" onChange={(e) => inputName(e.target.value)} /> 
+                   <button type="submit">Enter</button>
             </form>
-            <UploadFile name='Susan'/>
         </div>
     )
 }

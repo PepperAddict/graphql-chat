@@ -1,0 +1,38 @@
+.main-container 
+    width: 100%;
+    font-size: 1.2rem;
+    overflow: hidden;
+    padding: 30px;
+    box-sizing: border-box;
+
+.chat-container
+    column-count: 3;
+    counter-reset: item-counter;
+    column-gap: 0;
+    p 
+        break-inside: avoid;
+        padding: 5px;
+        margin: 5px;
+        border: 3px solid #ccc;
+        border-radius: 5px;
+        display: grid;
+        place-items: center;
+    .img-container 
+        display: flex;
+        position: relative;
+        break-inside: avoid;
+        padding: 5px;
+        border: 3px solid #ccc;
+        margin: 5px;
+        border-radius: 5px;
+        strong 
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            z-index: 2;
+    img 
+        display: flex;
+        width: 250px;
+        overflow: hidden;
+        padding: 5px;
+        object-fit: cover;

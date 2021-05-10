@@ -1,33 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useMutation } from '@apollo/client';
 import { POST_MESSAGE } from '../helpers/graphql.js';
 
-const formData = new FormData()
+var formData = new FormData()
 
 
 export default function UploadImage({ name }) {
     const [file, setFile] = useState(null)
     const [sendMessage] = useMutation(POST_MESSAGE);
+    const imageInput = useRef();
 
     const uploadFile = (e) => {
         e.preventDefault();
-        console.log(file);
-        formData.append('myFile', file)
 
-        fetch('http://localhost:8080/upload', {
-            method: "POST",
-            body: formData
-        }).then((res) => res.text()).then((response) => {
-            sendMessage({variables: {
-                theUser: 'tracy',
-                theMessage: response, 
-                theFile: 'true'
-            }})
-        }).catch((err) => console.log(err))
+        
+        const acceptedImages = ["image/jpeg", "image/png", "image/gif"]
+        if ( file && acceptedImages.includes(file.type)) {
+            formData.append('myFile', file)
+        
+            fetch('http://localhost:8080/upload', {
+                method: "POST",
+                body: formData
+            }).then((res) => res.text()).then((response) => {
+                sendMessage({
+                    variables: {
+                        theUser: name,
+                        theMessage: response,
+                        theFile: 'true'
+                    }
+                })
+                setFile(null);
+                if (imageInput) imageInput.current.value = ""
+                formData = new FormData();
+            }).catch((err) => console.log(err))
+        } else {
+            console.log('not allowed')
+        }
+
+
     }
     return (
         <form onSubmit={uploadFile}>
-            <input type="file" id="myFile" name="filename" onChange={(e) => setFile(e.target.files[0])} />
+            <input type="file" id="myFile" name="filename" ref={imageInput} onChange={(e) => setFile(e.target.files[0])} />
             <button type="submit">upload</button>
         </form>
     )
