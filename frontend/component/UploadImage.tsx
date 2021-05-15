@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { POST_MESSAGE } from '../helpers/graphql.js';
 
@@ -9,6 +9,8 @@ export default function UploadImage({ name }) {
     const [file, setFile] = useState(null)
     const [sendMessage] = useMutation(POST_MESSAGE);
     const imageInput = useRef();
+
+
 
     const uploadFile = (e) => {
         e.preventDefault();
@@ -29,8 +31,9 @@ export default function UploadImage({ name }) {
                         theFile: 'true'
                     }
                 })
+                //reset everything
                 setFile(null);
-                if (imageInput) imageInput.current.value = ""
+                if (imageInput) (imageInput as any).current.value = ""
                 formData = new FormData();
             }).catch((err) => console.log(err))
         } else {

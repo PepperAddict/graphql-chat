@@ -24,7 +24,7 @@ export default function Welcome () {
 
     return (
         <div className="home-container">
-            <h1>Welcome to the ChatClub</h1>
+            <h1>Welcome to ChatClub</h1>
             <form onSubmit={enterUsername}>
                    <input placeholder="Enter a nickname" pattern="[A-Za-z]{3,}" title="Letters only" onChange={(e) => inputName(e.target.value)} /> 
                    <button type="submit">Enter</button>
