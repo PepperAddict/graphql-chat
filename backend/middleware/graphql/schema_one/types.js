@@ -28,6 +28,8 @@ const typeDefs = gql`
     postMessage(name: String!, message: String!, file: String): Boolean!
     "This mutation will upload a file"
     uploadImage(file: FileUpload!): String!
+    "This mutation will delete a post"
+    removeMessage(_id: ID!): Boolean!
   }
 
   #Subscription

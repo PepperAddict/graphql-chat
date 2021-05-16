@@ -1,4 +1,4 @@
-const { neDBAll, neDBAdd, newSubscriber, subscribers } = require("../../../helpers");
+const { neDBAll, neDBAdd, newSubscriber, neDBRemove, subscribers } = require("../../../helpers");
 //importing pubsub here since sending it as context kept saying it was undefined.
 const { PubSub, GraphQLUpload } = require("apollo-server-express");
 const pubsub = new PubSub();
@@ -31,6 +31,18 @@ const resolvers = {
         return false;
       }
     },
+    removeMessage: async (parent, {_id}) => {
+      try {
+        return await neDBRemove(_id).then((res) => {
+          subscribers.forEach((fn) => fn())
+          return true;
+        })
+      } catch(err) {
+        console.log(err)
+        return false;
+      }
+    },
+
     uploadImage: async (parent, variables) => {
       //graphql upload doesn't work with subscription since it uses link. can't have more than one right now.
        

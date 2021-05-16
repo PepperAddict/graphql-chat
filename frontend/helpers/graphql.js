@@ -33,3 +33,9 @@ mutation ($file:  Upload!) {
 }
 
 `
+
+export const REMOVE_MESSAGE = gql`
+mutation ($id: ID!) {
+  removeMessage(_id: $id)
+}
+`

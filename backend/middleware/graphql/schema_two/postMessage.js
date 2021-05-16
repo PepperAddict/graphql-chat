@@ -10,7 +10,6 @@ module.exports = {
     file: {type: GraphQLString}
   },
    resolve: async (parent, {name, message, file}) => {
-    console.log(message)
     let date = String(new Date());
     file = file ? file : "false";
     try {
@@ -18,7 +17,6 @@ module.exports = {
         .then((res) => {
           //this will trigger the subscribers and give them the updated messages
           subscribers.forEach((fn) => fn());
-          console.log('hello')
           return true;
         })
         .catch((err) => console.log(err));

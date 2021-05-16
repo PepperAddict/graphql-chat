@@ -10,3 +10,4 @@ module.exports = function (app) {
   const webpackDevMiddleware = require("webpack-dev-middleware");
   app.use(webpackDevMiddleware(webpackCompiler, webpackConfig.devServer));
 };
+

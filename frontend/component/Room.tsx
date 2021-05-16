@@ -2,23 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useMutation, useSubscription } from '@apollo/client';
 import { RootStateOrAny, useSelector } from 'react-redux';
-import { POST_MESSAGE, WATCH_MESSAGE } from '../helpers/graphql.js';
+import { POST_MESSAGE, WATCH_MESSAGE, REMOVE_MESSAGE } from '../helpers/graphql.js';
 import TheFileUpload from './UploadImage'
 import '../styles/room.styl'
 
-function Messages({ messages }) {
+function DeleteMessage({id}) {
+
+    const [removeMessage] = useMutation(REMOVE_MESSAGE)
+
+    const initiateRemoval = () => {
+        removeMessage({variables: {id}})
+    }
+
+    return <span onClick={() => initiateRemoval()}>✖</span>
+}
+
+function Messages({ messages, user }) {
 
     return (<div className="chat-container">
         { messages.sort((a, b) => b._id - a._id).map(({ _id, name, message, file }, key) => {
             if (file === "true") {
-                return <div key={_id} className="img-container"> <strong>{name}</strong> <img src={message} /></div>
+                return <div key={_id} className="img-container chat"> <strong className="img-name">{name}</strong> <img src={message} /> {(user===name) && <DeleteMessage id={_id} />} </div>
             }
-            return <p key={_id}> <strong>{name}: </strong> {message}</p>
+            return <p className="chat" key={_id}> <strong>{name}: </strong> {message} {(user===name) && <DeleteMessage id={_id} />}  </p>
         })}
     </div>
     )
 }
-
 
 export default function Room() {
 
@@ -40,8 +50,6 @@ export default function Room() {
                 }
             })
         }
-
-
 
         setMessage('')
     }
@@ -67,7 +75,7 @@ export default function Room() {
         }
 
 
-        {data && <Messages messages={data.newMessages} />}
+        {data && <Messages messages={data.newMessages} user={user}/>}
 
     </div>
 }
