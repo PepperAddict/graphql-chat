@@ -9,14 +9,11 @@ export default function Welcome () {
     const [name, inputName] = useState(null);
     const dispatch = useDispatch()
     const user = useSelector((state: RootStateOrAny) => state.user.value)
-    
 
      const enterUsername = async(e) => {
          e.preventDefault();
          await dispatch(setName(name))
      }
-
-
 
     if (user) {
         return <Redirect to="/room/" />

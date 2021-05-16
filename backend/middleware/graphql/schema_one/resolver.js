@@ -1,28 +1,16 @@
-const { neDBAll, neDBAdd } = require("../../helpers");
+const { neDBAll, neDBAdd, newSubscriber, subscribers } = require("../../../helpers");
 //importing pubsub here since sending it as context kept saying it was undefined.
 const { PubSub, GraphQLUpload } = require("apollo-server-express");
 const pubsub = new PubSub();
 const path = require('path')
 const fs = require('fs')
 
-//for nedb
-const Datastore = require("nedb");
-const database = new Datastore("database.db");
-database.loadDatabase();
-
-
-
-//our subscribers for our subscription
-const subscribers = [];
-//the function that adds a new subscriber
-const newSubscriber = (fn) => subscribers.push(fn);
 
 const resolvers = {
   FileUpload: GraphQLUpload,
   Query: {
     getAllMessages: async (parent, variables) => {
-      const allData = await neDBAll(database);
-
+      const allData = await neDBAll();
       return allData;
     },
   },
@@ -32,7 +20,7 @@ const resolvers = {
       let date = String(new Date())
       file = (file)? file: 'false'
       try {
-        return await neDBAdd(database, { name, message, date, file })
+        return await neDBAdd({ name, message, date, file })
           .then((res) => {
             //this will trigger the subscribers and give them the updated messages
             subscribers.forEach((fn) => fn())
@@ -60,10 +48,10 @@ const resolvers = {
       subscribe: async () => {
         const channel = "COOL";
 
-        newSubscriber(async () => await pubsub.publish(channel, { newMessages: await neDBAll(database) }))
+        newSubscriber(async () => await pubsub.publish(channel, { newMessages: await neDBAll() }))
         
         // //send the data as soon as you enter
-        setTimeout(async () => await pubsub.publish(channel, { newMessages: await neDBAll(database) }), 0);
+        setTimeout(async () => await pubsub.publish(channel, { newMessages: await neDBAll() }), 0);
 
         //turning on the subscription possibility to the channel
         return pubsub.asyncIterator(channel);

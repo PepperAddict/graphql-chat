@@ -24,12 +24,15 @@ const typeDefs = gql`
 
   # Mutations 
   type Mutation {
+    "This mutation will post a message"
     postMessage(name: String!, message: String!, file: String): Boolean!
+    "This mutation will upload a file"
     uploadImage(file: FileUpload!): String!
   }
 
   #Subscription
   type Subscription {
+    "This subscription will watch for postMessage's activities"
     newMessages: [Message!]
   }
 `;

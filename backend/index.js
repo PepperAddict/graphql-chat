@@ -3,10 +3,10 @@ const app = express();
 const path = require("path");
 const cors = require('cors');
 const {execute, subscribe} = require('graphql')
-const {makeExecutableSchema} = require('graphql-tools');
+
 const  { SubscriptionServer } = require('subscriptions-transport-ws');
-const {typeDefs, resolvers} = require('./middleware/graphql');
-const schema = makeExecutableSchema({typeDefs, resolvers});
+const {schema, gqlSchema} = require('./middleware/graphql');
+
 
 //file upload
 const multer = require('multer');
@@ -38,7 +38,7 @@ subServ.listen(8080, () => {
     new SubscriptionServer({
       execute,
       subscribe,
-      schema
+      schema: gqlSchema
     }, {
       server: subServ,
       path: '/subscriptions'
@@ -46,7 +46,7 @@ subServ.listen(8080, () => {
 });
 
 //setting up our graphql server
-const graphqlServer = new ApolloServer({ typeDefs, resolvers, context: (req, res) => ({req, res}), playground: true, subscriptions: {path: '/subscriptions'} })
+const graphqlServer = new ApolloServer({ schema: gqlSchema, context: (req, res) => ({req, res}), playground: true, subscriptions: {path: '/subscriptions'} })
 graphqlServer.applyMiddleware({app});
 
 app.use(cors())
