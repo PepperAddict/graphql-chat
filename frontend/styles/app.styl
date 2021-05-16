@@ -22,9 +22,22 @@ body
     height: 100vh;
 form 
     display: grid;
+    position: relative;
     width: 100%;
+    margin: 20px 0;
+    padding: 20px 0;
+    border-bottom: 1px solid #ccc;
     button 
         justify-self: end;
+        position: absolute;
+        right: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0px;
+        border-radius: 5px;
+        @media screen and (max-width: 600px) 
+            position: relative;
+            margin: 10px 0;
     p  
     input 
         width: 100%;
@@ -37,12 +50,18 @@ form
 
 button 
     height: 40px;
-    width: 100px;
+    width: 150px;
     margin: 5px 0;
     float: right;
     cursor: pointer;
-    background: #00dc1f;
+    background: #00b2d8;
     color: white;
     border: 0px;
     font-weight: bold;
+    font-size: 1.5 rem;
+    text-transform: uppercase;
+    transition: .3s;
+    &:hover 
+        background: hotpink;
+        transition: .3s;
 

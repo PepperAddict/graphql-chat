@@ -6,19 +6,17 @@ import { POST_MESSAGE, WATCH_MESSAGE, REMOVE_MESSAGE } from '../helpers/graphql.
 import TheFileUpload from './UploadImage'
 import '../styles/room.styl'
 
+//This is for deleting a message if it belongs to the user
 function DeleteMessage({id}) {
-
     const [removeMessage] = useMutation(REMOVE_MESSAGE)
-
     const initiateRemoval = () => {
         removeMessage({variables: {id}})
     }
-
     return <span onClick={() => initiateRemoval()}>✖</span>
 }
 
+//this is for each of the messages
 function Messages({ messages, user }) {
-
     return (<div className="chat-container">
         { messages.sort((a, b) => b._id - a._id).map(({ _id, name, message, file }, key) => {
             if (file === "true") {
@@ -64,7 +62,7 @@ export default function Room() {
     return <div className="main-container">
         <h1>Hello {user}</h1>
         <div className="navigation-container">
-            <button onClick={() => setFileUpload(false)}>chat</button> <button onClick={() => setFileUpload(true)}>upload</button>
+            <button className={(!fileUpload) && "active"} onClick={() => setFileUpload(false)}>chat</button> <button className={(fileUpload) && "active"} onClick={() => setFileUpload(true)}>upload</button>
         </div>
 
         {!fileUpload ?
@@ -73,7 +71,6 @@ export default function Room() {
                 <button type="submit">Send</button>
             </form> : <TheFileUpload name={user} />
         }
-
 
         {data && <Messages messages={data.newMessages} user={user}/>}
 

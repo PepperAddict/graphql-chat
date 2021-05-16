@@ -5,15 +5,21 @@
     padding: 30px;
     box-sizing: border-box;
 
+.navigation-container 
+    .active 
+        background: hotpink;
+
 .chat-container
     column-count: 3;
     counter-reset: item-counter;
     column-gap: 0;
+    @media screen and (max-width: 600px) 
+        display: grid;
     p 
         break-inside: avoid;
-        padding: 5px;
+        padding: 15px;
         margin: 5px;
-        border: 3px solid #ccc;
+        border: 1px solid #ccc;
         border-radius: 5px;
         display: grid;
         place-items: center;
@@ -22,7 +28,7 @@
         position: relative;
         break-inside: avoid;
         padding: 5px;
-        border: 3px solid #ccc;
+        border: 1px solid #ccc;
         margin: 5px;
         border-radius: 5px;
         strong 
@@ -30,7 +36,7 @@
             top: 5px;
             left: 5px;
             z-index: 2;
-            background: white;
+            background: rgba(255, 255, 255, 0.8);
             width: auto;
             box-sizing: border-box;
             padding: 15px;

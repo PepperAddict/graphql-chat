@@ -7,9 +7,9 @@ This app was created with React and Node with the focus on GraphQL/Apollo for th
 ## Table of Contents 
 * [GraphQL](#GraphQL)
 * [The Presentation](#The-presentation)
-* [See in action](#See-in-action)
+* [See it in Action](#See-it-in-action)
 * [What the App Does](#What-the-App-Does)
-* [Files to note](#Files-to-note)
+* [Some things to note](#Notes)
 * [Problems](#Problems)
 
 ## GraphQL 
@@ -22,11 +22,12 @@ This app was created with React and Node with the focus on GraphQL/Apollo for th
 
 A presentation was created to go with this project, to access it, click [here](https://docs.google.com/presentation/d/1vaq3VCaOYX4slT3khjKx212wMpilsHATN5NNvB6ynXA/edit?usp=sharing)
 
-## See in action
+## See it in action
 
 During the presentation I should have a tunnelled server running that others could access, but if you would like to run it yourself, there are a couple of steps you need to do: 
 
 * install all the packages `npm i` or `yarn i`
+* Build the app `npm run build` or `yarn run build`
 * start the app `npm start` or `yarn start`
 * You should see the server running at `http://localhost:8080` and the **GraphQL** playground running at `http://localhost:8080/graphql`
 
@@ -36,17 +37,16 @@ During the presentation I should have a tunnelled server running that others cou
 * Toggle between chat or upload for the type of message you want shared with others
 * Chat will let you send a message
 * Upload will let you send an image. Dragging an image over also works. 
-* Nicknames that match the chat are deletable.
+* Nicknames that match the message's name are deletable.
 
-
-## Files to note 
+## Notes
 
 * If you are running this app locally, the "database" is [neDB](https://github.com/louischatriot/nedb). You can find the file `database.db` of any data that was stored on your end. This file is not shared. 
 
-* Images uploaded from the front-end are stored in `public>images` and are also not shared... But will be stored on my local machine. 
+* Images uploaded from the front-end are stored in `public>images` and are not shared... But will be stored on my local machine.... so.... yeah....
 
 ## Problems 
 
 * The upload feature is executed with a standard POST request handled by multer rather than GraphQL because [apollo-upload-client](https://github.com/jaydenseric/apollo-upload-client) doesn't work alongside [Subscription link](https://www.apollographql.com/docs/react/data/subscriptions/#4-provide-the-link-chain-to-apollo-client) and I was too lazy to research a better client-side graphql upload tool.
 
-* This app had little to no thought when it comes to security...
+* This app had little to no thought when it comes to security, UI, responsiveness, and other stuff...
